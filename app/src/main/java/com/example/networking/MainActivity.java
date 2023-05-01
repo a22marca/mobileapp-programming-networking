@@ -2,36 +2,36 @@ package com.example.networking;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class MainActivity extends AppCompatActivity implements JsonTask.JsonTaskListener {
 
-    private final String JSON_URL = "HTTPS_URL_TO_JSON_DATA_CHANGE_THIS_URL";
+    private final String JSON_URL = "https://mobprog.webug.se/json-api?login=brom";
     private final String JSON_FILE = "mountains.json";
+    private ArrayList<Mountain> mountains;
+    private RecyclerViewAdapter recycleViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        new JsonFile(this, this).execute(JSON_FILE);
 
-        // Test RecycleView
-        ArrayList<Mountain> mountains = new ArrayList<>(Arrays.asList(
-                new Mountain("K2"),
-                new Mountain("Kebnekaise"),
-                new Mountain("Mount Everest")
-        ));
+        new JsonTask(this).execute(JSON_URL);
 
-        RecyclerViewAdapter recycleViewAdapter = new RecyclerViewAdapter(this, mountains, new RecyclerViewAdapter.OnClickListener() {
+        mountains = new ArrayList<>();
+
+        recycleViewAdapter = new RecyclerViewAdapter(this, mountains, new RecyclerViewAdapter.OnClickListener() {
             @Override
             public void onClick(Mountain mountain) {
             }
@@ -45,6 +45,24 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
     @Override
     public void onPostExecute(String json) {
         Log.d("MainActivity", json);
+        JSONArray jsonArray;
+        try {
+            jsonArray = new JSONArray(json);
+
+            for (int i = 0; i < jsonArray.length();i++){
+                JSONObject jsonObj;
+                String name;
+                jsonObj = (JSONObject) jsonArray.get(i);
+                name = jsonObj.getString("name");
+                Log.d("onPost", name);
+                mountains.add(new Mountain(name));
+            }
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        recycleViewAdapter.notifyDataSetChanged();
+
     }
 
 }
