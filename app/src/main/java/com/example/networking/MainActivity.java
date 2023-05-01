@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
         recycleViewAdapter = new RecyclerViewAdapter(this, mountains, new RecyclerViewAdapter.OnClickListener() {
             @Override
             public void onClick(Mountain mountain) {
+                Toast.makeText(MainActivity.this, mountain.getName(), Toast.LENGTH_SHORT).show();
             }
         });
 
