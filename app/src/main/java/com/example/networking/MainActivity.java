@@ -50,13 +50,12 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
             jsonArray = new JSONArray(json);
 
             for (int i = 0; i < jsonArray.length();i++){
-                JSONObject jsonObj;
-                String name;
-                jsonObj = (JSONObject) jsonArray.get(i);
-                name = jsonObj.getString("name");
+                JSONObject jsonObj = (JSONObject) jsonArray.get(i);
+                String name = jsonObj.getString("name");
                 Log.d("onPost", name);
                 mountains.add(new Mountain(name));
             }
+
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
