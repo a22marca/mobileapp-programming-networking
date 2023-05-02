@@ -46,13 +46,13 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
     @Override
     public void onPostExecute(String json) {
         Log.d("MainActivity", json);
-        JSONArray jsonArray;
+
         try {
-            jsonArray = new JSONArray(json);
+            JSONArray jsonArray = new JSONArray(json);
 
             for (int i = 0; i < jsonArray.length();i++){
-                JSONObject jsonObj = (JSONObject) jsonArray.get(i);
-                String name = jsonObj.getString("name");
+                JSONObject jsonObj = (JSONObject) jsonArray.get(i); // get object
+                String name = jsonObj.getString("name"); // get name of mountain
                 Log.d("onPost", name);
                 mountains.add(new Mountain(name));
             }
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
             throw new RuntimeException(e);
         }
 
-        recycleViewAdapter.notifyDataSetChanged();
+        recycleViewAdapter.notifyDataSetChanged(); //update RecycleView
 
     }
 
